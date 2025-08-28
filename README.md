@@ -1,20 +1,87 @@
 # 🧩 Sudoku Solver
 
-A **Python-based Sudoku Solver** with a modern **Tkinter GUI**, offering two solving modes:  
-- **Manual Input Mode** – enter puzzles by hand  
-- **Image Upload Mode** – solve from an image using OpenCV + Tesseract OCR  
+![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
+![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-green.svg)
+
+A modern, user-friendly Sudoku Solver with two modes:
+- **Manual Input**: Enter Sudoku puzzles by hand in a beautiful GUI.
+- **Image Upload**: Upload a photo of a Sudoku puzzle and let the app recognize and solve it using OCR and computer vision.
+
+## Features
+- **Manual Input Mode**
+  - Intuitive 9x9 grid for entering puzzles.
+  - Number pad and control buttons for easy editing.
+  - Highlights conflicts and solved cells.
+  - Option to generate a random puzzle.
+  - Solve button instantly fills in the solution.
+
+- **Image Upload Mode**
+  - Upload a photo or scan of a Sudoku puzzle.
+  - Automatic grid detection and digit recognition (using OpenCV and Tesseract OCR).
+  - Solves the puzzle and overlays the solution on the image.
+  - Option to save the solved image.
+
+## Technologies Used
+- Python 3
+- Tkinter (GUI)
+- OpenCV (image processing)
+- pytesseract (OCR)
+- PIL/Pillow (image handling)
+
+## Getting Started
+
+### Prerequisites
+- Python 3.x
+- [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) (required for image mode)
+- Install required Python packages:
+
+```bash
+pip install opencv-python pytesseract pillow numpy
+```
+
+### Tesseract Setup
+- Download and install Tesseract OCR from [here](https://github.com/tesseract-ocr/tesseract).
+- Update the `pytesseract.pytesseract.tesseract_cmd` path in `image_upload.py` if needed.
+
+## 🚀 Clone Repository
+
+To get started with the Sudoku Solver on your local machine, clone the repository using:
+
+```bash
+git clone https://github.com/PranavYadu/Sudoku-Solver.git
+cd sudoku-solver
+```
+
+### Running the App
+
+```bash
+python main.py
+```
+
+- Choose **Manual Input** to enter a puzzle by hand.
+- Choose **Image Upload** to solve a puzzle from an image.
+
+## Screenshots
+
+### Sudoku Solver GUI
+![Sudoku Solver GUI](image/screenshot.png)
+
 
 ---
 
-## ✨ Features
-- 🔢 Manual Sudoku input via interactive 9×9 grid  
-- 📷 Image upload with automatic grid detection & OCR  
-- ✅ Backtracking algorithm for fast solving  
-- 🎲 Random puzzle generator  
-- 📌 Conflict highlighting in rows, columns, and boxes  
-- 💾 Save solved Sudoku as an image  
-- 🎨 Modern UI with hover effects & keyboard navigation  
+## Acknowledgments
+
+- **OpenCV** – used for image preprocessing and grid detection.  
+- **Tesseract OCR** – used for recognizing digits from Sudoku images.  
+- **Tkinter** – used for building the interactive graphical user interface.  
+- **Python** – the core language that powers the solver and algorithm.  
 
 ---
 
-## 📂 Project Structure
+## Feedback
+
+If you have any feedback, ideas, or want to contribute to this project, feel free to:  
+- Open an **issue** in the repository.  
+- Submit a **pull request** with improvements.  
+
+We truly appreciate community input and contributions! 🚀
