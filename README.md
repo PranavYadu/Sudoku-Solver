@@ -64,7 +64,7 @@ python main.py
 ## Screenshots
 
 ### Sudoku Solver GUI
-![Sudoku Solver GUI](image/screenshot.png)
+<img width="1033" height="794" alt="Screenshot 2025-08-28 114231" src="https://github.com/user-attachments/assets/4a113c6f-7be9-4e23-9126-a185e9f1846e" />
 
 
 ---
