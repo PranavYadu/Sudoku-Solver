@@ -66,17 +66,12 @@ python main.py
 ### Sudoku Solver GUI
 <img width="1033" height="794" alt="Screenshot 2025-08-28 114231" src="https://github.com/user-attachments/assets/4a113c6f-7be9-4e23-9126-a185e9f1846e" />
 
-
----
-
 ## Acknowledgments
 
 - **OpenCV** – used for image preprocessing and grid detection.  
 - **Tesseract OCR** – used for recognizing digits from Sudoku images.  
 - **Tkinter** – used for building the interactive graphical user interface.  
 - **Python** – the core language that powers the solver and algorithm.  
-
----
 
 ## Feedback
 
