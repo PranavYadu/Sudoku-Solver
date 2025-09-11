@@ -185,7 +185,7 @@ class SudokuGUI:
             self.solve_btn = None
 
         self.show_backtrack_btn = self.create_custom_button(
-            self.right_frame, text="Show Backtracking", width=14, height=2,
+            self.right_frame, text="Visualize", width=14, height=2,
             bg="#5a7bc0", fg="white", hover_bg="#4b69ad",
             command=self.show_backtracking
         )
