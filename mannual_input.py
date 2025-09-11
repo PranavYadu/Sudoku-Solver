@@ -1,5 +1,5 @@
 import tkinter as tk
-from solver import solve_board, generate_random_puzzle
+from solver import solve_board, generate_random_puzzle, solve_step
 
 class SudokuGUI:
     def __init__(self, root):
@@ -12,7 +12,18 @@ class SudokuGUI:
 
         self.selected_cell = None
         self.cells = [[None for _ in range(9)] for _ in range(9)]
-        self.solved_cells = set()  # Add this line
+        self.solved_cells = set()
+        
+        self.original_values = None
+        self.givens = [[False for _ in range(9)] for _ in range(9)]
+        self.step_iter = None
+        self.is_playing = False
+        self.speed_multiplier = 1
+        self.base_delay_ms = 300
+        self._after_job = None
+        self.visual_controls_frame = None
+        self.play_pause_btn = None
+        self.speed_btns = {}
 
         title = tk.Label(root, text="Sudoku Solver", font=("Helvetica", 20, "bold"))
         title.pack(pady=10)
@@ -76,12 +87,12 @@ class SudokuGUI:
             )
             btn.grid(row=row, column=col, padx=5, pady=5)
 
-        solve_btn = self.create_custom_button(
+        self.solve_btn = self.create_custom_button(
             self.right_frame, text="Solve", width=14, height=2,
             bg="#5a7bc0", fg="white", hover_bg="#4b69ad",
             command=self.solve
         )
-        solve_btn.pack(pady=(10, 0))
+        self.solve_btn.pack(pady=(10, 0))
 
     def create_custom_button(self, parent, text, command=None, width=4, height=2,
                              bg=None, fg=None, hover_bg=None):
@@ -124,14 +135,16 @@ class SudokuGUI:
             self.highlight_conflicts()
 
     def reset_grid(self):
+        self.stop_visualization(restore_solve=True)
         for i in range(9):
             for j in range(9):
                 self.cells[i][j].delete(0, tk.END)
         self.reset_focus()
 
     def fill_random(self):
+        self.stop_visualization(restore_solve=True)
         puzzle = generate_random_puzzle(given=30)
-        self.solved_cells.clear()  # Clear solved cells so all numbers are black
+        self.solved_cells.clear()
         for i in range(9):
             for j in range(9):
                 self.cells[i][j].delete(0, tk.END)
@@ -140,7 +153,7 @@ class SudokuGUI:
         self.reset_focus()
 
     def solve(self):
-        original_values = [[self.cells[i][j].get() for j in range(9)] for i in range(9)]
+        self.original_values = [[self.cells[i][j].get() for j in range(9)] for i in range(9)]
         board = []
         for i in range(9):
             row = []
@@ -149,18 +162,161 @@ class SudokuGUI:
                 row.append(int(val) if val.isdigit() else 0)
             board.append(row)
 
-        self.solved_cells.clear()  # Clear previous solved cells
+        self.solved_cells.clear()
 
         if solve_board(board):
             for i in range(9):
                 for j in range(9):
                     self.cells[i][j].delete(0, tk.END)
                     self.cells[i][j].insert(0, str(board[i][j]))
-                    if original_values[i][j] == '':
-                        self.solved_cells.add((i, j))  # Track solved cell
+                    if self.original_values[i][j] == '':
+                        self.solved_cells.add((i, j))
             self.reset_focus()
+            self.replace_solve_with_visual_button()
         else:
             print("No solution exists.")
+
+    def replace_solve_with_visual_button(self):
+        if getattr(self, 'solve_btn', None):
+            try:
+                self.solve_btn.destroy()
+            except Exception:
+                pass
+            self.solve_btn = None
+
+        self.show_backtrack_btn = self.create_custom_button(
+            self.right_frame, text="Show Backtracking", width=14, height=2,
+            bg="#5a7bc0", fg="white", hover_bg="#4b69ad",
+            command=self.show_backtracking
+        )
+        self.show_backtrack_btn.pack(pady=(10, 0))
+
+    def show_backtracking(self):
+        if self.original_values is None:
+            self.original_values = [[self.cells[i][j].get() for j in range(9)] for i in range(9)]
+
+        for i in range(9):
+            for j in range(9):
+                self.cells[i][j].delete(0, tk.END)
+                val = self.original_values[i][j]
+                if val.isdigit() and val != '0':
+                    self.cells[i][j].insert(0, val)
+                    self.givens[i][j] = True
+                else:
+                    self.givens[i][j] = False
+
+        board = [[int(v) if (isinstance(v, str) and v.isdigit()) else (v if isinstance(v, int) else 0)
+                  for v in row] for row in self.original_values]
+        self.step_iter = solve_step(board)
+
+        # Remove the Show Backtracking button and place controls in its spot
+        if getattr(self, 'show_backtrack_btn', None):
+            try:
+                self.show_backtrack_btn.destroy()
+            except Exception:
+                pass
+            self.show_backtrack_btn = None
+
+        if self.visual_controls_frame is None:
+            self.visual_controls_frame = tk.Frame(self.right_frame)
+        try:
+            self.visual_controls_frame.pack_forget()
+        except Exception:
+            pass
+        self.visual_controls_frame.pack(pady=(10, 0))
+
+        for child in list(self.visual_controls_frame.children.values()):
+            child.destroy()
+
+        self.play_pause_btn = self.create_custom_button(
+            self.visual_controls_frame, text="⏸" if self.is_playing else "⏵",
+            command=self.toggle_play_pause, width=3, height=1
+        )
+        self.play_pause_btn.grid(row=0, column=0, padx=5)
+
+        self.speed_btns.clear()
+        speeds = [1, 2, 4]
+        for idx, sp in enumerate(speeds, start=1):
+            btn = self.create_custom_button(
+                self.visual_controls_frame, text=f"{sp}x",
+                command=lambda s=sp: self.set_speed(s), width=3, height=1
+            )
+            btn.grid(row=0, column=idx, padx=5)
+            self.speed_btns[sp] = btn
+
+        # Start playing
+        self.is_playing = True
+        if self.play_pause_btn:
+            self.play_pause_btn.config(text="⏸")
+        self.run_next_step()
+
+    def toggle_play_pause(self):
+        self.is_playing = not self.is_playing
+        if self.play_pause_btn:
+            self.play_pause_btn.config(text="⏸" if self.is_playing else "⏵")
+        if self.is_playing:
+            self.run_next_step()
+
+    def set_speed(self, multiplier):
+        self.speed_multiplier = multiplier
+        # No additional styling changes required; keep look consistent
+
+    def run_next_step(self):
+        if not self.is_playing or self.step_iter is None:
+            return
+        try:
+            step = next(self.step_iter)
+            action, r, c, num = step
+            self.selected_cell = (r, c)
+            self.highlight_conflicts()
+            if not self.givens[r][c]:
+                if action == "place":
+                    self.cells[r][c].delete(0, tk.END)
+                    self.cells[r][c].insert(0, str(num))
+                elif action == "remove":
+                    self.cells[r][c].delete(0, tk.END)
+            self.highlight_conflicts()
+        except StopIteration:
+            self.is_playing = False
+            if self.play_pause_btn:
+                self.play_pause_btn.config(text="⏵")
+            return
+
+        delay = int(self.base_delay_ms / max(1, self.speed_multiplier))
+        self._after_job = self.root.after(delay, self.run_next_step)
+
+    def stop_visualization(self, restore_solve=False):
+        if self._after_job is not None:
+            try:
+                self.root.after_cancel(self._after_job)
+            except Exception:
+                pass
+            self._after_job = None
+        self.is_playing = False
+        self.step_iter = None
+        self.selected_cell = None
+        self.highlight_conflicts()
+        if self.visual_controls_frame is not None:
+            try:
+                self.visual_controls_frame.pack_forget()
+            except Exception:
+                pass
+            for child in list(self.visual_controls_frame.children.values()):
+                child.destroy()
+        if restore_solve:
+            if getattr(self, 'show_backtrack_btn', None):
+                try:
+                    self.show_backtrack_btn.destroy()
+                except Exception:
+                    pass
+                self.show_backtrack_btn = None
+            if getattr(self, 'solve_btn', None) is None:
+                self.solve_btn = self.create_custom_button(
+                    self.right_frame, text="Solve", width=14, height=2,
+                    bg="#5a7bc0", fg="white", hover_bg="#4b69ad",
+                    command=self.solve
+                )
+                self.solve_btn.pack(pady=(10, 0))
 
     def select_cell(self, row, col):
         self.selected_cell = (row, col)
@@ -171,7 +327,6 @@ class SudokuGUI:
             self.select_cell(row, col)
 
     def validate_input(self, event):
-        # Only allow single digit, and always replace cell with new digit
         if event.char in "123456789":
             if self.selected_cell:
                 row, col = self.selected_cell
@@ -186,7 +341,6 @@ class SudokuGUI:
             return "break"
 
     def limit_input(self, row, col):
-        # No need to fix cell here, handled in validate_input
         value = self.cells[row][col].get()
         if len(value) > 1:
             self.cells[row][col].delete(1, tk.END)
@@ -196,7 +350,6 @@ class SudokuGUI:
     def highlight_conflicts(self):
         for i in range(9):
             for j in range(9):
-                # Color solved cells blue, others black
                 if (i, j) in getattr(self, 'solved_cells', set()):
                     self.cells[i][j].config(bg="white", fg="#5a7bc0")
                 else:

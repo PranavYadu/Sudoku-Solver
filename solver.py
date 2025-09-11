@@ -1,17 +1,14 @@
 import random
 
 def is_valid(board, row, col, num):
-    # Row check
     for x in range(9):
         if board[row][x] == num:
             return False
 
-    # Column check
     for x in range(9):
         if board[x][col] == num:
             return False
 
-    # 3x3 box check
     start_row = (row // 3) * 3
     start_col = (col // 3) * 3
     for i in range(3):
@@ -35,7 +32,7 @@ def solve_board(board):
 
     row, col = empty
     nums = list(range(1, 10))
-    random.shuffle(nums)  # Add randomness
+    random.shuffle(nums)
 
     for num in nums:
         if is_valid(board, row, col, num):
@@ -47,17 +44,38 @@ def solve_board(board):
     return False
 
 
+def solve_step(board):
+    def backtrack():
+        empty = find_empty(board)
+        if not empty:
+            return True
+
+        row, col = empty
+        for num in range(1, 10):
+            if is_valid(board, row, col, num):
+                board[row][col] = num
+                yield ("place", row, col, num)
+
+                result = yield from backtrack()
+                if result:
+                    return True
+
+                board[row][col] = 0
+                yield ("remove", row, col, num)
+
+        return False
+
+    yield from backtrack()
+
 def solve_gui_board(gui_cells):
     board = [[0 for _ in range(9)] for _ in range(9)]
 
-    # Read values from GUI
     for i in range(9):
         for j in range(9):
             val = gui_cells[i][j].get()
             if val.isdigit():
                 board[i][j] = int(val)
 
-    # Solve it
     if solve_board(board):
         for i in range(9):
             for j in range(9):
@@ -71,7 +89,6 @@ def generate_random_puzzle(given=None):
     board = [[0 for _ in range(9)] for _ in range(9)]
     solve_board(board)
 
-    # Number of filled cells to keep
     if given is None:
         given = random.randint(17, 30)
 
