@@ -29,7 +29,7 @@ In manual mode, after solving a Sudoku puzzle, you can click the **Show Backtrac
 - **How to use:**
   1. Enter your puzzle in manual mode.
   2. Click **Solve** to solve the puzzle.
-  3. Click **Show Backtracking** to watch the solving process animated in the GUI.
+  3. Click **Visualize** to watch the solving process animated in the GUI.
 
 ## Technologies Used
 - Python 3
