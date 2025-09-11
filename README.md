@@ -22,6 +22,15 @@ A modern, user-friendly Sudoku Solver with two modes:
   - Solves the puzzle and overlays the solution on the image.
   - Option to save the solved image.
 
+## Visualize Backtracking
+
+In manual mode, after solving a Sudoku puzzle, you can click the **Show Backtracking** button to visualize the backtracking algorithm step-by-step. This feature animates how the solver explores possibilities and finds the solution, helping you understand the solving process.
+
+- **How to use:**
+  1. Enter your puzzle in manual mode.
+  2. Click **Solve** to solve the puzzle.
+  3. Click **Show Backtracking** to watch the solving process animated in the GUI.
+
 ## Technologies Used
 - Python 3
 - Tkinter (GUI)
@@ -61,15 +70,6 @@ python main.py
 
 - Choose **Manual Input** to enter a puzzle by hand.
 - Choose **Image Upload** to solve a puzzle from an image.
-
-## Visualize Backtracking
-
-In manual mode, after solving a Sudoku puzzle, you can click the **Show Backtracking** button to visualize the backtracking algorithm step-by-step. This feature animates how the solver explores possibilities and finds the solution, helping you understand the solving process.
-
-- **How to use:**
-  1. Enter your puzzle in manual mode.
-  2. Click **Solve** to solve the puzzle.
-  3. Click **Show Backtracking** to watch the solving process animated in the GUI.
 
 ## Screenshots
 
