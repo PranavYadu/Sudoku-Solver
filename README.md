@@ -14,6 +14,7 @@ A modern, user-friendly Sudoku Solver with two modes:
   - Highlights conflicts and solved cells.
   - Option to generate a random puzzle.
   - Solve button instantly fills in the solution.
+  - **Show Backtracking**: Visualize the solving process step-by-step.
 
 - **Image Upload Mode**
   - Upload a photo or scan of a Sudoku puzzle.
@@ -60,6 +61,15 @@ python main.py
 
 - Choose **Manual Input** to enter a puzzle by hand.
 - Choose **Image Upload** to solve a puzzle from an image.
+
+## Visualize Backtracking
+
+In manual mode, after solving a Sudoku puzzle, you can click the **Show Backtracking** button to visualize the backtracking algorithm step-by-step. This feature animates how the solver explores possibilities and finds the solution, helping you understand the solving process.
+
+- **How to use:**
+  1. Enter your puzzle in manual mode.
+  2. Click **Solve** to solve the puzzle.
+  3. Click **Show Backtracking** to watch the solving process animated in the GUI.
 
 ## Screenshots
 
