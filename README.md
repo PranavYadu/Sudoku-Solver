@@ -86,6 +86,7 @@ python main.py
 
 - Choose **Manual Input** to enter a puzzle by hand.
 - Choose **Image Upload** to solve a puzzle from an image.
+- Choose **Play Game** to play sudoku for fun.
 
 ## Screenshots
 
