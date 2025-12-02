@@ -5,10 +5,7 @@ import numpy as np
 import pytesseract
 from PIL import Image, ImageTk
 
-# Set Tesseract path (adjust if needed)
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-
-# --- Core Sudoku Functions ---
 
 def preprocess_image(img_path):
     img = cv2.imread(img_path)
@@ -116,7 +113,6 @@ def draw_solution(warp, board, original):
             if original[i][j] == 0:
                 text = str(board[i][j])
                 pos = (j * cell_size + 15, i * cell_size + 35)
-                # #5a7bc0 in BGR is (192, 123, 90)
                 cv2.putText(warp, text, pos, cv2.FONT_HERSHEY_SIMPLEX, 1.5, (192, 123, 90), 2)
     return warp
 
@@ -130,6 +126,9 @@ class SudokuApp:
         self.root.bind('<Escape>', close_on_esc)
         self.root = root
         self.root.title("Sudoku Solver")
+        # Increase the size of the Image Upload window (width x height)
+        # Adjust these values if you want it bigger or smaller.
+        self.root.geometry("250x180")
 
         tk.Label(root, text="Sudoku Solver", font=("Helvetica", 20, "bold")).pack(pady=10)
 
@@ -146,7 +145,6 @@ class SudokuApp:
                                     borderwidth=0, highlightthickness=0)
         self.upload_btn.pack(pady=10)
 
-        # Add hover effect to upload button
         def on_enter(e): self.upload_btn.config(bg=self.btn_hover)
         def on_leave(e): self.upload_btn.config(bg=self.btn_bg)
         self.upload_btn.bind("<Enter>", on_enter)
@@ -173,14 +171,11 @@ class SudokuApp:
         if solve(puzzle):
             solved_img = draw_solution(warped.copy(), puzzle, original)
             self.show_image(solved_img)
-            # Remove solved label if present
             if hasattr(self, 'solved_label') and self.solved_label.winfo_exists():
                 self.solved_label.destroy()
-            # Remove upload button
             if hasattr(self, 'upload_btn') and self.upload_btn.winfo_exists():
                 self.upload_btn.pack_forget()
-            # Show Save Image button with hover effect
-            self.save_img = solved_img  # Store for saving
+            self.save_img = solved_img
             self.save_btn = tk.Button(self.root, text="Save Image", font=self.btn_font, bg="#5a7bc0", fg="white",
                                      width=14, height=2, relief="flat", borderwidth=0, highlightthickness=0,
                                      activebackground="#4b69ad", activeforeground="white",

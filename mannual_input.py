@@ -122,7 +122,6 @@ class SudokuGUI:
             row, col = self.selected_cell
             self.cells[row][col].delete(0, tk.END)
             self.cells[row][col].insert(0, str(num))
-            # Remove from solved_cells if user edits
             self.solved_cells.discard((row, col))
             self.highlight_conflicts()
 
@@ -130,7 +129,6 @@ class SudokuGUI:
         if self.selected_cell:
             row, col = self.selected_cell
             self.cells[row][col].delete(0, tk.END)
-            # Remove from solved_cells if user erases
             self.solved_cells.discard((row, col))
             self.highlight_conflicts()
 
@@ -209,7 +207,6 @@ class SudokuGUI:
                   for v in row] for row in self.original_values]
         self.step_iter = solve_step(board)
 
-        # Remove the Show Backtracking button and place controls in its spot
         if getattr(self, 'show_backtrack_btn', None):
             try:
                 self.show_backtrack_btn.destroy()
@@ -244,7 +241,6 @@ class SudokuGUI:
             btn.grid(row=0, column=idx, padx=5)
             self.speed_btns[sp] = btn
 
-        # Start playing
         self.is_playing = True
         if self.play_pause_btn:
             self.play_pause_btn.config(text="⏸")
@@ -259,7 +255,6 @@ class SudokuGUI:
 
     def set_speed(self, multiplier):
         self.speed_multiplier = multiplier
-        # No additional styling changes required; keep look consistent
 
     def run_next_step(self):
         if not self.is_playing or self.step_iter is None:

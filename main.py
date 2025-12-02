@@ -1,6 +1,7 @@
 import tkinter as tk
 import mannual_input
 import image_upload
+import game
 
 def launch_gui():
     mannual_input.SudokuGUI(tk.Tk())
@@ -8,10 +9,13 @@ def launch_gui():
 def launch_image():
     image_upload.SudokuApp(tk.Tk())
 
+def launch_game():
+    game.SudokuGame(tk.Tk())
+
 def main():
     root = tk.Tk()
     root.title("Sudoku Solver")
-    root.geometry("400x300")
+    root.geometry("400x380")
     root.configure(bg="#eaeef1")
     def close_on_esc(event=None):
         root.destroy()
@@ -40,6 +44,9 @@ def main():
 
     image_btn = make_button("Image Upload", lambda: [root.destroy(), launch_image()])
     image_btn.pack(pady=5)
+
+    game_btn = make_button("Play Game", lambda: [root.destroy(), launch_game()])
+    game_btn.pack(pady=5)
 
     root.mainloop()
 
