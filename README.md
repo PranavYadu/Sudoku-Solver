@@ -3,9 +3,10 @@
 ![Python](https://img.shields.io/badge/Python-3.x-blue.svg)
 ![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-green.svg)
 
-A modern, user-friendly Sudoku Solver with two modes:
+A modern, user-friendly Sudoku Solver with three modes:
 - **Manual Input**: Enter Sudoku puzzles by hand in a beautiful GUI.
-- **Image Upload**: Upload a photo of a Sudoku puzzle and let the app recognize and solve it using OCR and computer vision.
+- **Image Upload**: Upload a photo of a Sudoku puzzle and let the app recognise and solve it using OCR and computer vision.
+- **Play Game**: Solve Sudoku on your own for fun
 
 ## Features
 - **Manual Input Mode**
