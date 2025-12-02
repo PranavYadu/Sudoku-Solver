@@ -21,10 +21,26 @@ A modern, user-friendly Sudoku Solver with two modes:
   - Automatic grid detection and digit recognition (using OpenCV and Tesseract OCR).
   - Solves the puzzle and overlays the solution on the image.
   - Option to save the solved image.
+ 
+- **Game Mode**
+  - **Difficulty Levels**: Easy, Medium, Hard, Extreme
+  
+  - **Game Controls**
+    - **Number Pad**: Click numbers 1-9 to fill cells
+    - **Hint Button**: Get a hint for the current puzzle
+    - **Clear Button**: Clear all user entries
+    - **Reset Button**: Reset the puzzle to the initial state
+  
+  - **Features**
+    - Real-time conflict detection
+    - Timer to track solving time
+    - Score calculation based on difficulty and time
+    - Highlights for row, column, and box
+    - Tracks player statistics and best times
 
-## Visualize Backtracking
+## Visualise Backtracking
 
-In manual mode, after solving a Sudoku puzzle, you can click the **Show Backtracking** button to visualize the backtracking algorithm step-by-step. This feature animates how the solver explores possibilities and finds the solution, helping you understand the solving process.
+In manual mode, after solving a Sudoku puzzle, you can click the **Show Backtracking** button to visualise the backtracking algorithm step-by-step. This feature animates how the solver explores possibilities and finds the solution, helping you understand the solving process.
 
 - **How to use:**
   1. Enter your puzzle in manual mode.
@@ -79,7 +95,7 @@ python main.py
 ## Acknowledgments
 
 - **OpenCV** – used for image preprocessing and grid detection.  
-- **Tesseract OCR** – used for recognizing digits from Sudoku images.  
+- **Tesseract OCR** – used for recognising digits from Sudoku images.  
 - **Tkinter** – used for building the interactive graphical user interface.  
 - **Python** – the core language that powers the solver and algorithm.  
 
